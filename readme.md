@@ -2,6 +2,10 @@
 
 Pufferfish (the software formerly known as dnacompressor for a while) is an easy to use, lightweight and powerful tool for DNA compression and decompression.
 
+NOTE
+At present we're still in alpha (December 2010) so certain features remain in the sourece for testing
+
+
 ## Basic overview
 
 DNA files in FASTA are a lot bigger than they need to be for storage or transmission. To help deal with this, pufferfish takes as input a text file containing the FASTA format, and very quickly outputs a compressed version of that data.
@@ -13,3 +17,24 @@ At the moment usage is limited to
 Which is to say you take an input file (which must exist) and an output file (which can exits, if it does it will be overwritten) and use either `-c` flag to indicate compress or `-d` flag to indicate decompress.
 
 ## Installation
+At the moment the software is only on for linux, although it's pure C++ so porting into a windows command line tool should be fairly straightforward (minial OS interaction through POSIX compliant means).
+
+1. Compile using make
+
+    make
+    
+2. Done. To make it a system-wide executable you'll need to copy the binary to your /usr/bin directory or add the binary's dirctory to the $PATH variable. 
+
+## Functionality
+Pretty limited at present, but things currently being added include
+
+* Define free memory usage from command line
+* Output formatting options
+* Installation scripts to offer system wide installation
+* Search NCBI BLAST using a compressed file (i.e. decompress in background and run a search using the web API - this might be a bit over the top)
+* Improved performance through a number of avenuesdifferent architechture testing and parallelization
+    * Parallelization (and associated customization)
+    * Algorithmic optimization
+    * Advanced compression structuring
+* Direct transmission link (i.e. no centralized server but direct P2P transmission)
+* Hilarious logo (less of a priority)
