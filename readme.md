@@ -39,9 +39,10 @@ At the moment the software is only on for linux, although it's pure C++ so porti
 
 1. Compile using make
 
+
     make
     
-2. Done. To make it a system-wide executable you'll need to copy the binary to your /usr/bin directory or add the binary's directory to the `<$PATH>` variable. 
+2. Done. To make it a system-wide executable you'll need to copy the binary to your `/usr/bin` directory or add the binary's directory to the `$PATH` variable. 
 
 ## Functionality
 Pretty limited at present, beyond compression and decompression, but things currently being added include;
