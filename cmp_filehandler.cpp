@@ -22,11 +22,14 @@ using std::endl;
 using std::ifstream;
 using std::ofstream;
 
-// static
+// static variable
 std::vector<string> cmp_filehandler::expected_args(number_of_flags);
+
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// default constructor
+//
+// initializer function for the expected_args vector
 
 bool cmp_filehandler::init(){
   
@@ -48,6 +51,12 @@ bool cmp_filehandler::init(){
 }
 
 
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+// constructor
+
 cmp_filehandler::cmp_filehandler() {
   
   // initialize that bad boy!
@@ -55,9 +64,12 @@ cmp_filehandler::cmp_filehandler() {
 }
 
 
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
 // function to load a file based purly on the filename (stream
+
 ifstream* cmp_filehandler::load_input_file(string input_filename, int &filesize){
   
   cout << "Attempting to open file: " << input_filename << endl; 
@@ -78,9 +90,13 @@ ifstream* cmp_filehandler::load_input_file(string input_filename, int &filesize)
   return input_file_p;
 }
 
+
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
 // function to load the output file as a stream
+
 ofstream* cmp_filehandler::load_output_file(string output_filename){
   
   ofstream* output_file_p = new ofstream; // input filestream opened using new_filename
@@ -103,13 +119,16 @@ ofstream* cmp_filehandler::load_output_file(string output_filename){
 }
 
 
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
 // function to check the programs input arguments and determine the input and output 
 // filenames
-
+//
 // usage should be ./dnacompressor -i input -o output [-c] | [-d] (-c for compress
 // -d for decompress) 
+
 int cmp_filehandler::check_args (int argc, char *argv[], vector<string> &io, 
 				 bool &format_out,
 				 int &memory_usage,
@@ -150,9 +169,10 @@ int cmp_filehandler::check_args (int argc, char *argv[], vector<string> &io,
 	if (memory_usage < 5)
 	  memory_usage = 5;
 
-	// 2 GB array is top limit
-	if (memory_usage > 2000000)
-	  memory_usage = 2000000;
+	// 2 GB array is top limit [not tested this high
+	// might break everything...]
+	if (memory_usage > 2000000000)
+	  memory_usage = 2000000000;
 	
       }
     }
@@ -190,25 +210,38 @@ int cmp_filehandler::check_args (int argc, char *argv[], vector<string> &io,
     ret_val = 2;
 
   // -----------------------------------------------------------
-  // get additional options based on the bitmap
+  // get additional options based on the bitmap flags 
   if (arg_bitmap[5] == 1)
     format_out = true;
   
+  // for numbering to be true formatting must also be true
+  
   if (arg_bitmap[7] == 1){
     numbering = true;
-    format_out = true; // for numbering to be true formatting must also be true
-  }
-    
-
+    format_out = true; 
+  }  
   
-  // somethings gone wrong mode
   return ret_val;
 }
+
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+// function which sets the content of an integer array of size length to 0
 
 void cmp_filehandler::zeros(int *argc, int size){
   for (int i = 0 ; i < size ; i++)
     argc[i] = 0;
 }
+
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+// prints pufferfish usage
 
 void cmp_filehandler::usage(){
   cerr << "ERROR: Unsuported input:" << endl
@@ -219,6 +252,13 @@ void cmp_filehandler::usage(){
        << "-h                  Print help associated with pufferfish" << endl << endl
        << "Exiting..." << endl;
 }
+
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+// prints pufferfish help
 
 void cmp_filehandler::help(){
   cerr << "dnacompress is a superlightweight tool for compressing/decompressing DNA into a highly portable format" << endl
@@ -232,9 +272,10 @@ void cmp_filehandler::help(){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// function to return the size of the file parsed in
 //
-// returns -1 if fails else size is returned
+// function to return the size of the file parsed in. Returns -1 if fails else size is 
+// returned. Requires #include <sys/stat.h>
+
 int cmp_filehandler::get_file_size(string filename){
   
   struct stat results;
