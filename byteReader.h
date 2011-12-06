@@ -8,7 +8,7 @@
 
 // include any relevant header files here...
 
-/*! \brief static class which takes a char and returns the binary number as an int (for viewing, not manipulation)
+/*! \brief static class which takes a char and returns the binary number as a cstring (for viewing, not manipulation)
 
 <Longer class description>
 */ 
