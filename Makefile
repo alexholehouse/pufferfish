@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS = -Wall -g
 
-pufferfish: byteReader.o cmp_filehandler.o main.o cmp_encode.o cmp_decode.o
+pufferfish: byteReader.o cmp_filehandler.o main.o cmp_encode.o cmp_decode.o 
 	$(CC) $(CFLAGS) byteReader.o cmp_decode.o cmp_encode.o cmp_filehandler.o main.o -o pufferfish
 
 main.o: main.cpp cmp_filehandler.h
