@@ -10,6 +10,7 @@
 #include <string>
 #include <cstdlib>
 #include <vector>
+#include <sys/stat.h>
 
 #include "cmp_filehandler.h"
 
@@ -57,7 +58,7 @@ cmp_filehandler::cmp_filehandler() {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // function to load a file based purly on the filename (stream
-ifstream* cmp_filehandler::load_input_file(string input_filename){
+ifstream* cmp_filehandler::load_input_file(string input_filename, int &filesize){
   
   cout << "Attempting to open file: " << input_filename << endl; 
   
@@ -71,6 +72,8 @@ ifstream* cmp_filehandler::load_input_file(string input_filename){
     cerr << "Exiting..." << endl;
     exit(1);
   }
+
+  filesize = get_file_size(input_filename);
 
   return input_file_p;
 }
@@ -90,6 +93,8 @@ ofstream* cmp_filehandler::load_output_file(string output_filename){
     message.append(output_filename);
     system(message.c_str());
   }
+
+  
   
   // open the file (C++ creates it at this point automatically)
   output_file_p->open(output_filename.c_str(), std::ios::app);
@@ -221,6 +226,37 @@ void cmp_filehandler::help(){
        << "dnacom -i INPUT -o OUTPUT [-c] || [-d]" << endl
        << "Exiting..." << endl << endl
        << "Please address bug reports to alex@holehouse.org" << endl;
+}
+
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// function to return the size of the file parsed in
+//
+// returns -1 if fails else size is returned
+int cmp_filehandler::get_file_size(string filename){
+  
+  struct stat results;
+  int size;
+  
+  if (stat(filename.c_str(), &results) == 0)
+    size = results.st_size;
+  else
+    size = -1;
+  
+  return size;
+}
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// function to return the number of bases for a compressed file
+//
+// returns -1 if fails else size is returned
+
+int cmp_filehandler::get_number_bases(string filename){
+  return (4*(get_file_size(filename)-2));
 }
 
 

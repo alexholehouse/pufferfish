@@ -17,6 +17,7 @@ int main (int argc, char *argv[]){
 
   // varz
   int input_status;
+  int filesize = -1;
   cmp_filehandler handler;
   ifstream* input_file_p;
   ofstream* output_file_p;
@@ -31,27 +32,30 @@ int main (int argc, char *argv[]){
   // and returns the io filenames in the io_filename vector [0] is 
   // input, [1] is output
   input_status = handler.check_args(argc, argv, io_filenames, formatting, memory_usage, numbering);
-
-  cout << "Input check as follows;" << endl
-       << "Input file = " << io_filenames[0] << endl
-       << "Output file = " << io_filenames[1] << endl
-       << "Status = " << input_status << endl
-       << "Formatting? " << formatting << endl
-       << "Memory usage? " << memory_usage << endl;
-
+  
   // load the input and output files
-  input_file_p = handler.load_input_file(io_filenames[0]);
+  input_file_p = handler.load_input_file(io_filenames[0], filesize);
   output_file_p = handler.load_output_file(io_filenames[1]);
+  
   
   // compress 
   if (input_status == 1){
     cmp_encode encoder(memory_usage);
     if(encoder.encode(input_file_p, output_file_p)){
+
+      // must close to get filedata
+      input_file_p->close();
+      output_file_p->close();
       
       cout << "o---------------------------------------" << endl;
       cout << "|  COMPRESSION COMPLETE" << endl;
-      cout << "|  Original: " << io_filenames[0] << endl;
-      cout << "|  Compressed: " << io_filenames[1] << endl;
+      cout << "|  Original:        " << io_filenames[0] << endl;
+      cout << "|  Original Size:   " << handler.get_file_size(io_filenames[0]) 
+	   << " bytes" << endl;
+      cout << "|  Compressed:      " << io_filenames[1] << endl;
+      cout << "|  Compressed Size: " << handler.get_file_size(io_filenames[1]) 
+	   << " bytes" << endl;
+      cout << "|  Number of bases: " << handler.get_number_bases(io_filenames[1]) << endl;
       cout << "o---------------------------------------" << endl;
     }
     
@@ -67,25 +71,35 @@ int main (int argc, char *argv[]){
     cmp_decode decoder(formatting, numbering);
     decoder.decode(input_file_p, output_file_p);
 
+    // must close to get filedata
+    input_file_p->close();
+    output_file_p->close();
+    
     cout << "o---------------------------------------" << endl;
     cout << "|  DECOMPRESSION COMPLETE" << endl;
-    cout << "|  Compressed: " << io_filenames[0] << endl;
-    cout << "|  Decompressed: " << io_filenames[1] << endl;
+    cout << "|  Compressed:        " << io_filenames[0] << endl;
+    cout << "|  Compressed Size:   " << handler.get_file_size(io_filenames[0]) 
+	 << " bytes" << endl;
+    cout << "|  Decompressed:      " << io_filenames[1] << endl;
+    cout << "|  Decompressed Size: " << handler.get_file_size(io_filenames[1]) 
+	 << " bytes" << endl;
+    cout << "|  Number of bases: " << handler.get_number_bases(io_filenames[0]) << endl;
     cout << "o---------------------------------------" << endl;
-  
   }
-
+  
+  
+  // if it's all gone wrong
   else {
-    cerr << "Error: Something has gone wrong with the input arguments. " << endl << "Exiting.." << endl;  
-
+    cerr << "Error: Something has gone wrong with the input arguments. " << endl 
+	 << "Exiting.." << endl;  
+      
+    // always close your streams
     input_file_p->close();
     output_file_p->close();
     
     exit(1);
   }
   
-  input_file_p->close();
-  output_file_p->close();
   return 0;
 }
 

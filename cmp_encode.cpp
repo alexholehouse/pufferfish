@@ -120,8 +120,8 @@ bool cmp_encode::encode(ifstream *input_file, ofstream *output_file){
       }
       
       // DEBUG-WRITE
-      cout << "Writing byte content (" << byteReader::readByte(byte) 
-	   << ") to mem_array pos " << counter << endl;
+      //cout << "Writing byte content (" << byteReader::readByte(byte) 
+      //     << ") to mem_array pos " << counter << endl;
       
       // writing a byte to the in memory array
       // cout << "Writing byte to memarray " << static_cast<int>(byte) << endl;

@@ -29,17 +29,21 @@ class cmp_filehandler {
   int check_args (int argc, char *argv[], vector<string> &io, bool &formatting, int &memory_usage, bool &numbering);
   
   // load a filename and return an open, functioning input filestream
-  std::ifstream* load_input_file(std::string filename);
+  std::ifstream* load_input_file(std::string filename, int &filesize);
 
   // load a filename and return an open, functioning output filestream
   std::ofstream* load_output_file(std::string filename);
   
-  
+  int get_file_size(string filename);
+  int get_number_bases(string filename);
  private:
   
   static const int number_of_flags = 8;
   static vector<string> expected_args;
   //  vector<string> expected_args;
+
+  //
+  
   
   bool init();
   void zeros(int *argc, int size);
