@@ -43,7 +43,9 @@ int main (int argc, char *argv[]){
   // and returns the io filenames in the io_filename vector [0] is 
   // input, [1] is output
   input_status = handler.check_args(argc, argv, io_filenames, formatting, memory_usage, numbering);
-
+  
+  
+				
   // load the input and output files
   input_file_p = handler.load_input_file(io_filenames[0], filesize);
   output_file_p = handler.load_output_file(io_filenames[1]);

@@ -214,8 +214,13 @@ int cmp_filehandler::check_args (int argc, char *argv[], vector<string> &io,
   // for numbering to be true formatting must also be true
   
   if (arg_bitmap[7] == 1){
-    numbering = true;
-    format_out = true; 
+    
+    // if more than 99999 bases then numbering
+    // breaks down
+    if(99999 >= get_number_bases(io[0])){
+      numbering = true;
+      format_out = true; 
+    }
   }  
   
   return ret_val;

@@ -41,11 +41,11 @@ Note that at present the lower limit is capped at 5 bytes and the upper limit at
 
 ##### formatting
     -f
-For decompression only, formats the output into blocks eight blocks of four bases per line
+For decompression only, formats the output into eight blocks of four bases per line
 
 ##### numbering
     -n
-For decompression only, adds base numbers to the start of each line. NB If number of bases is greater than 99999 then the formatting becomes distorted (i.e. lines stop being in column  sync). A fix is coming!
+For decompression only, adds base numbers to the start of each line. NB If number of bases is greater than 99999 then the formatting becomes distorted so if this is the case numbering is forced off.
 
 
 
