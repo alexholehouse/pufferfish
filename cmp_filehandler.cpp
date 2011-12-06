@@ -11,9 +11,9 @@
 #include <cstdlib>
 #include <vector>
 #include <sys/stat.h>
-
 #include "cmp_filehandler.h"
 
+// using declarations
 using std::string;
 using std::cout;
 using std::cerr;
@@ -22,7 +22,7 @@ using std::endl;
 using std::ifstream;
 using std::ofstream;
 
-// static variable
+// static variable declaration
 std::vector<string> cmp_filehandler::expected_args(number_of_flags);
 
 
@@ -33,11 +33,6 @@ std::vector<string> cmp_filehandler::expected_args(number_of_flags);
 
 bool cmp_filehandler::init(){
   
-  if (int(expected_args.size()) != number_of_flags){
-    cerr << "Error regarding software flags handling - please correct and recompile (line 38 cmp_filehandler.cpp" << endl;
-    exit(1);
-  }
-    
   expected_args[0] = "-i"; // input file
   expected_args[1] = "-o"; // output file
   expected_args[2] = "-c"; // compress
@@ -202,8 +197,10 @@ int cmp_filehandler::check_args (int argc, char *argv[], vector<string> &io,
   }
   
   // compress mode
-  if (arg_bitmap[2] == 1)
+  if (arg_bitmap[2] == 1){
+    io[1] = io[1].append(".pfsh");
     ret_val = 1;
+  }
 
   // decompress mode
   if (arg_bitmap[3] == 1)

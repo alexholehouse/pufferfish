@@ -10,15 +10,20 @@
 #include <cstdlib>
 #include "cmp_decode.h"
 
+
+// using declarations
 using std::ifstream;
 using std::ofstream;
 using std::endl;
 
+
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// default constructor
+// constructor
 // 
-// Set decoding parameters
+// Set decoding parameters in the process
+
 cmp_decode::cmp_decode(bool _format, bool _numbering) {
   numbering = _numbering;
   format = _format;
@@ -30,8 +35,9 @@ cmp_decode::cmp_decode(bool _format, bool _numbering) {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // decode
 //
-// Takes two (open) filestreams and decodes the compressed instream  and
-// dumps it into the outstream
+// Takes two (open) filestreams and decodes the compressed instream,
+// dumping it into the outstream
+
 bool cmp_decode::decode(ifstream *IN, ofstream *OUT){
   
   // variable decs
@@ -65,6 +71,12 @@ bool cmp_decode::decode(ifstream *IN, ofstream *OUT){
     // if this byte is the EOF then tempbyte has been encoded to show how many bases
     // were stored in what is currently in byte. i.e. the end of the file is
     // [AGCT]-[AGXX]-[2]-[EOF] (where each [block] is a byte
+    // 
+    // So in this example
+    // byte = AGCT (encoded)
+    // tempbyte = 2 (not encoded)
+    // eoftest = EOF
+    
     
     if (eoftest == EOF){
       finished = true;
@@ -109,6 +121,7 @@ bool cmp_decode::decode(ifstream *IN, ofstream *OUT){
 }
 
 
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // char_to_code
@@ -116,7 +129,7 @@ bool cmp_decode::decode(ifstream *IN, ofstream *OUT){
 // takes a byte (from the compressed input stream) and converts it into a cstring of 
 // four characters, returning the string (unless it's the penultimate byte, in which 
 // case it retunrs the number of bases in the preceding byte. 
-//
+
 char* cmp_decode::char_to_code(char byte, int num_bases){
   
   char* code = new char[5];

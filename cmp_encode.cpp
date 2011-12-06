@@ -1,6 +1,6 @@
 // --- Custom header for this file built by autoClasser --- //
 // Alex Holehouse (alex.holehouse@gmail.com)
-// Part of the dnacompress project
+// Part of the pufferfish project
 // Contact me at alex.holehouse@gmail.com for more details
 // version 1.0 - December 2011
 
@@ -12,6 +12,7 @@
 #include "cmp_encode.h"
 #include "byteReader.h"
 
+// using declarations
 using std::ifstream;
 using std::ofstream;
 using std::cout;
@@ -20,7 +21,11 @@ using std::endl;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
 // default constructor
+//
+// Sets dedicated memory variable to the passed argument
+
 cmp_encode::cmp_encode(int mem) {
   DEDICATED_MEMORY = mem;
 }
@@ -29,7 +34,13 @@ cmp_encode::cmp_encode(int mem) {
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// another function would go here
+// encode 
+//
+// Main class function, input file and output file should have been checked and be open 
+// and .good() filestreams as they are directly interacted with.
+//
+// If something goes wrong with diskwrite returns false, else returns true
+
 bool cmp_encode::encode(ifstream *input_file, ofstream *output_file){
   
   // character declarations
@@ -37,9 +48,9 @@ bool cmp_encode::encode(ifstream *input_file, ofstream *output_file){
   char byte; // the byte we encode four bases into
   char mem_array[DEDICATED_MEMORY]; // an in memory array of the encoded bytes
   bool exit = false; // exit flag when we get to the end of the file
-  int counter = 0; // counter through FASTA file - is never reset
+  int counter = 0; // counter through input file - is never reset
   int byte_counter; // counter through the byte, is reset on each byte back to 0;
-  int offset = 0; // A
+  int offset = 0; // To determine final offset
   
   
   // Set A,C,G and T as 2 bit encoding 
@@ -48,6 +59,7 @@ bool cmp_encode::encode(ifstream *input_file, ofstream *output_file){
   // 0000 0010 = G = 2
   // 0000 0011 = T = 3
 
+  // build reference values for bitwise operations
   char refbase[4];
   refbase[0] = static_cast<char>(0);
   refbase[1] = static_cast<char>(1);
@@ -60,11 +72,10 @@ bool cmp_encode::encode(ifstream *input_file, ofstream *output_file){
     
     // We loop until DEDICATED_MEMORY-1 because we always add a final
     // byte showing the progress through the penultimate byte. Although
-    // unlikely, we could segfault if by chance we had DEDICATED_MEMORY 
-    // nucleotides and we looped only to DEDICATED_MEMORY. This is why
-    // we loop to DEDICATED_MEMORY - 1 instead.
-    
-    // multiply by <loops> so we can restart where we left off if the file
+    // unlikely, if we went all the way to DEDICATED_MEMORY we could 
+    // segfault if by chance we had DEDICATED_MEMORY nucleotides
+    //
+    // We multiply by <loops> so we can restart where we left off if the file
     // contains more nucleotides than DEDICATED_MEMORY and we have to dump
     // to disk.
     
@@ -82,42 +93,47 @@ bool cmp_encode::encode(ifstream *input_file, ofstream *output_file){
 	// get the next character in the file
 	input_file->get(base);
 		
-	// switch on that character
-	switch(base){
+	// switch on that character with bitshifty magic
+	switch(base)
+	  {
 	  
-	case 'a':
-	case 'A': {
-	  byte = (byte | (refbase[0] << ((3 - byte_counter) *2) ));
-	  break;
-	}
+	  case 'a':
+	  case 'A': {
+	    byte = (byte | (refbase[0] << ((3 - byte_counter) *2) ));
+	    break;
+	  }
 	  
-	case 'c':
-	case 'C': {
-	  byte = (byte | (refbase[1] << ((3 - byte_counter) *2) ));
-	  break;
-	}
+	  case 'c':
+	  case 'C': {
+	    byte = (byte | (refbase[1] << ((3 - byte_counter) *2) ));
+	    break;
+	  }
+	  
+	  case 'g':
+	  case 'G': {
+	    byte = (byte | (refbase[2] << ((3 - byte_counter) *2) ));
+	    break;
+	  }
+	  
+	  case 't':
+	  case 'T': {
+	    byte = (byte | (refbase[3] << ((3 - byte_counter) *2) ));
+	    break;
+	  }
+	  
+	  // this makes out input pretty tolerant
+	  default: {
 	    
-	case 'g':
-	case 'G': {
-	  byte = (byte | (refbase[2] << ((3 - byte_counter) *2) ));
-	  break;
-	}
-	  
-	case 't':
-	case 'T': {
-	  byte = (byte | (refbase[3] << ((3 - byte_counter) *2) ));
-	  break;
-	}
-	  
-	// this makes out input pretty tolerant
-	default: {
-	  // if we hit the end of the file set exit status to true
-	  if (input_file->eof())
-	    exit = true;
-	  // else ignore this character so decrement the byte counter
-	  byte_counter--; }
+	    // if we hit the end of the file set exit status to true
+	    if (input_file->eof())
+	      exit = true;
+	    
+	    // else ignore this character so decrement the byte counter
+	    byte_counter--; 
+	  }
 	}
       }
+      
       
       // DEBUG-WRITE
       //cout << "Writing byte content (" << byteReader::readByte(byte) 
@@ -127,7 +143,7 @@ bool cmp_encode::encode(ifstream *input_file, ofstream *output_file){
       // cout << "Writing byte to memarray " << static_cast<int>(byte) << endl;
       mem_array[counter] = byte;
       
-      // if exit flag is raised
+      // if exit flag is raised (which means we're at the end of the input file)
       if (exit){
 	// shows how far through the final byte we were - this is important, unlikely 
 	// we'll have a (n mod 4 = 0) number of nucleotides!
@@ -144,7 +160,7 @@ bool cmp_encode::encode(ifstream *input_file, ofstream *output_file){
     }
     
     if (exit){
-      input_file->close();
+      //input_file->close();
       return true;
     }
   }
@@ -153,27 +169,23 @@ bool cmp_encode::encode(ifstream *input_file, ofstream *output_file){
 }
 
 
-// END OF FILE
-bool cmp_encode::write_array_to_disk(char* mem_array, int size, ofstream *output_file){
-  
-  //cout << "-------- DEBUG(write_array_to_disk)---------------" << endl; 
-  //cout << "size is = " << size << endl;
-  
-  ofstream LOG;
-  ofstream OUT;
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// write_array_to_disk 
+//
+// dumps the mem_array out through the output_file stream argument. Reduces number of 
+// filereads
+//
 
-  // always append - means each read adds to the end of the previously written block
-  LOG.open("log.txt", std::ios::app);
+bool cmp_encode::write_array_to_disk(char* mem_array, int size, ofstream *output_file){
   
   if (output_file->fail())
     return false;
 
-  for (int i = 0 ; i < size; i++){
+  for (int i = 0 ; i < size; i++)
     output_file->put(mem_array[i]);
-
-    LOG.put(static_cast<int>(mem_array[i]));
-  }
-
-  LOG.close();
+  
   return true;
 }
+
+// END OF FILE
