@@ -1,6 +1,6 @@
 // --- Custom header for this file built by autoClasser --- //
 // Alex Holehouse (alex.holehouse@gmail.com)
-// Part of the dnacompress project
+// Part of the pufferfish project
 // Contact me at alex.holehouse@gmail.com for more details
 // version 1.0 - December 2011
 
