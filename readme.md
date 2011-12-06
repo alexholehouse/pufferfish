@@ -1,6 +1,6 @@
 # Pufferfish (v1.0)
 
-Pufferfish (the software formerly known as dnacompressor for a while) is an easy to use, lightweight and powerful tool for DNA compression and decompression.
+Pufferfish (the software formerly known as dnacompressor) is an easy to use, lightweight and powerful tool for DNA compression and decompression.
 
 NOTE
 At present we're still in alpha (December 2010) so certain features remain in the source for testing and diagnostics. Notably, byteReader.* are used for translating bytes into binary, which was used for diagnostics, but will not be required for the final system.
@@ -8,47 +8,63 @@ At present we're still in alpha (December 2010) so certain features remain in th
 
 ## Basic overview
 
-DNA files in FASTA are a lot bigger than they need to be for storage or transmission. To help deal with this, pufferfish takes as input a text file containing the FASTA format, and very quickly outputs a compressed version of that data.
+DNA files in FASTA (i.e. RAW text) are a lot bigger than they need to be for storage or transmission - where a byte represents each character (A,T,C or G). To help deal with this, pufferfish takes as input a text file containing the FASTA format, and very quickly outputs a compressed version of that data.
 You can then re-expand that data to its original size using the same tool. The focus here was to provide a tiny program (compiled binary is 183Kb) with big power and functionality.
 At the moment usage is limited to
 
-    ./pufferfish -i <input file> -o <output file> [-c] | [-d]
+    $>./pufferfish -i <input file> -o <output file> [-c] | [-d]
     
 Which is to say you take an input file (which must exist) and an output file (which can exits, if it does it will be overwritten) and use either `-c` flag to indicate compress or `-d` flag to indicate decompress.
 
 ## Usage
 
-    ./pufferfish -i <input file> -o <output file> [OPTIONS]
+    $>./pufferfish -i <input file> -o <output file> [OPTIONS]
     
 where `[OPTIONS]` must be one of compress or decomress (`-c` or `-d` and then any number of the others. See below for detailed explanation;
 
-#### compress
+##### compress
     -c
 Compresses the input file and generates the output file
 
-#### decompress
+##### decompress
     -d
 Decompresses a file stored in pufferfish format back to FASTA format
 
-#### help
+##### help
     -h 
-Prints out help and usage instrictions for pufferfish
+Prints out help and usage instructions for pufferfish. Note that help overrides everything and forces the help output and nothing else.
+
+##### memory
+    -m
+Sets the amount of dedicated memory used for the compression process (note that at present dedicated memory for decompression isn't controllable - this may be something we add later).
+Note that at present the lower limit is capped at 5 bytes and the upper limit at 2 GBs (which is probably not recommended). Default is 1 MB which should be plenty!
+
+##### formatting
+    -f
+For decompression only, formats the output into blocks eight blocks of four bases per line
+
+##### numbering
+    -n
+For decompression only, adds base numbers to the start of each line. NB If number of bases is greater than 99999 then the formatting becomes distorted (i.e. lines stop being in column  sync). A fix is coming!
+
+
 
 ## Installation
-At the moment the software is only on for linux, although it's pure C++ so porting into a windows command line tool should be fairly straightforward (minial OS interaction through POSIX compliant means).
+At the moment the software is only on for linux, although it's pure C++ so porting into a windows command line tool should be fairly straightforward (minimal OS interaction through POSIX compliant methods).
 
 1. Compile using make
 
 
-    make
+
+     `$> make`
     
 2. Done. To make it a system-wide executable you'll need to copy the binary to your `/usr/bin` directory or add the binary's directory to the `$PATH` variable. 
 
 ## Functionality
 Pretty limited at present, beyond compression and decompression, but things currently being added include;
 
-* Define free memory usage from command line
-* Output formatting options
+* Define free memory usage from command line **[DONE]**
+* Output formatting options **[DONE]** (mostly)
 * Installation scripts to offer system wide installation
 * Search NCBI BLAST using a compressed file (i.e. decompress in background and run a search using the web API - this might be a bit over the top)
 * Improved performance through a number of avenues;
