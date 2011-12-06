@@ -5,7 +5,14 @@
 #include "cmp_encode.h"
 #include "cmp_decode.h"
 
-using namespace std;
+
+using std::endl;
+using std::ifstream;
+using std::ofstream;
+using std::cout;
+using std::cerr;
+
+
 int main (int argc, char *argv[]){
 
   // varz
@@ -15,18 +22,30 @@ int main (int argc, char *argv[]){
   ofstream* output_file_p;
   vector<string> io_filenames (2);
 
+  // argument flags
+  bool formatting = false;
+  bool numbering = false;
+  int memory_usage = 1000;
+
   // checks we have the flags we're expecting (-i, -o and -c or -d) 
   // and returns the io filenames in the io_filename vector [0] is 
   // input, [1] is output
-  input_status = handler.check_args(argc, argv, io_filenames);
-  
+  input_status = handler.check_args(argc, argv, io_filenames, formatting, memory_usage, numbering);
+
+  cout << "Input check as follows;" << endl
+       << "Input file = " << io_filenames[0] << endl
+       << "Output file = " << io_filenames[1] << endl
+       << "Status = " << input_status << endl
+       << "Formatting? " << formatting << endl
+       << "Memory usage? " << memory_usage << endl;
+
   // load the input and output files
   input_file_p = handler.load_input_file(io_filenames[0]);
   output_file_p = handler.load_output_file(io_filenames[1]);
   
   // compress 
   if (input_status == 1){
-    cmp_encode encoder;
+    cmp_encode encoder(memory_usage);
     if(encoder.encode(input_file_p, output_file_p)){
       
       cout << "o---------------------------------------" << endl;
@@ -45,7 +64,7 @@ int main (int argc, char *argv[]){
   // decompress
   else if (input_status == 2){
     
-    cmp_decode decoder;
+    cmp_decode decoder(formatting, numbering);
     decoder.decode(input_file_p, output_file_p);
 
     cout << "o---------------------------------------" << endl;

@@ -1,8 +1,8 @@
 CC=g++
 CFLAGS = -Wall -g
 
-dnacompress: byteReader.o cmp_filehandler.o main.o cmp_encode.o cmp_decode.o
-	$(CC) $(CFLAGS) byteReader.o cmp_decode.o cmp_encode.o cmp_filehandler.o main.o -o dnacompress
+pufferfish: byteReader.o cmp_filehandler.o main.o cmp_encode.o cmp_decode.o
+	$(CC) $(CFLAGS) byteReader.o cmp_decode.o cmp_encode.o cmp_filehandler.o main.o -o pufferfish
 
 main.o: main.cpp cmp_filehandler.h
 	$(CC) $(CFLAGS) main.cpp -c 

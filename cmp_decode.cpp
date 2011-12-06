@@ -13,13 +13,14 @@
 
 using std::ifstream;
 using std::ofstream;
-
+using std::endl;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // default constructor
-cmp_decode::cmp_decode() {
-  //
+cmp_decode::cmp_decode(bool _format, bool _numbering) {
+  numbering = _numbering;
+  format = _format;
 }
 
 
@@ -34,11 +35,17 @@ bool cmp_decode::decode(ifstream *IN, ofstream *OUT){
   char byte;
   char tempbyte;
   int num_bases;
+  int counter = 0;
+  int basecounter = 1;
   bool finished = false;
+  
+  if (numbering)
+    *OUT << basecounter << "     ";
   
   // get until EOF
   while(!finished){
-    
+    basecounter +=4;
+    counter++;
     //cout << "tellg() = " << IN.tellg() << endl;
     
     num_bases = 4;
@@ -58,8 +65,34 @@ bool cmp_decode::decode(ifstream *IN, ofstream *OUT){
       // cout << "Final number of bases is " << num_bases << endl;
     }
     
-    //cout << char_to_code(byte, num_bases) << endl;
+    // write to disk 
     *OUT << char_to_code(byte, num_bases);
+
+    // formatting 
+    if (format && counter !=8)
+      *OUT << " ";
+    
+    if (format && counter == 8){
+      *OUT << endl;
+      
+      // note, numbering breaks down after 99999 bases, although seems unlikely you'd
+      // be looking at a file by hand which is over 100 0000 bases?
+      if (numbering){
+	
+	if (basecounter < 100)
+	  *OUT << basecounter << "    ";
+
+	else if (basecounter < 1000)
+	  *OUT << basecounter << "   ";
+
+	else if (basecounter < 10000)
+	  *OUT << basecounter << "  ";
+      }
+      
+      // reset counter (NB basecounter continues counting)
+      counter = 0;
+    }
+	
   }
   
   

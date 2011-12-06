@@ -18,11 +18,13 @@
 class cmp_decode  {
 
 public:
-  cmp_decode();
+  cmp_decode(bool format, bool number);
   bool decode(std::ifstream *inputstream, std::ofstream *outputstream);
 
 private:
   char* char_to_code(char byte, int num_bases);
+  bool format;
+  bool numbering;
 
     
 // Private class methods and class variables go here

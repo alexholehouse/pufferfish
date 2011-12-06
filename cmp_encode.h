@@ -18,14 +18,14 @@ class cmp_encode {
   
  public:
   
-  cmp_encode();
+  cmp_encode(int mem);
   bool encode(std::ifstream *inputstream, std::ofstream *outputstream);
   // Public class methods go here
 
  private:
   // Private class methods and class variables go here
   bool write_array_to_disk(char* mem_array, int size, std::ofstream *output_file);
-  static int DEDICATED_MEMORY;
+  int DEDICATED_MEMORY;
 };
 
 #endif

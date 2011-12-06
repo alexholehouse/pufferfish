@@ -17,13 +17,12 @@ using std::ofstream;
 using std::cout;
 using std::endl;
 
-int cmp_encode::DEDICATED_MEMORY = 1000;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // default constructor
-cmp_encode::cmp_encode() {
-  
+cmp_encode::cmp_encode(int mem) {
+  DEDICATED_MEMORY = mem;
 }
 
 

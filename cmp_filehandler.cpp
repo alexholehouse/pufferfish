@@ -13,28 +13,44 @@
 
 #include "cmp_filehandler.h"
 
-using namespace std;
+using std::string;
+using std::cout;
+using std::cerr;
+using std::cerr;
+using std::endl;
+using std::ifstream;
+using std::ofstream;
 
-
- 
+// static
+std::vector<string> cmp_filehandler::expected_args(number_of_flags);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // default constructor
-cmp_filehandler::cmp_filehandler() {
-  
-  // initialize the flags we want the filehander to be able to deal with
-  expected_args.push_back("-i"); // input file
-  expected_args.push_back("-o"); // output file
-  expected_args.push_back("-c"); // compress
-  expected_args.push_back("-d"); // decompres
-  expected_args.push_back("-h"); // help
 
+bool cmp_filehandler::init(){
+  
   if (int(expected_args.size()) != number_of_flags){
-    cerr << "Added flag variables without updating the number_of_flag constants. Quitting - please correct!" << endl;
+    cerr << "Error regarding software flags handling - please correct and recompile (line 38 cmp_filehandler.cpp" << endl;
     exit(1);
   }
-  
     
+  expected_args[0] = "-i"; // input file
+  expected_args[1] = "-o"; // output file
+  expected_args[2] = "-c"; // compress
+  expected_args[3] = "-d"; // decompres
+  expected_args[4] = "-h"; // help
+  expected_args[5] = "-f"; // formatted output
+  expected_args[6] = "-m"; // set dedicated memory
+  expected_args[7] = "-n"; // output numbering
+
+  return true;
+}
+
+
+cmp_filehandler::cmp_filehandler() {
+  
+  // initialize that bad boy!
+  init();
 }
 
 
@@ -76,7 +92,7 @@ ofstream* cmp_filehandler::load_output_file(string output_filename){
   }
   
   // open the file (C++ creates it at this point automatically)
-  output_file_p->open(output_filename.c_str(), ios::app);
+  output_file_p->open(output_filename.c_str(), std::ios::app);
 
   return output_file_p;
 }
@@ -89,7 +105,13 @@ ofstream* cmp_filehandler::load_output_file(string output_filename){
 
 // usage should be ./dnacompressor -i input -o output [-c] | [-d] (-c for compress
 // -d for decompress) 
-int cmp_filehandler::check_args (int argc, char *argv[], vector<string> &io){
+int cmp_filehandler::check_args (int argc, char *argv[], vector<string> &io, 
+				 bool &format_out,
+				 int &memory_usage,
+				 bool &numbering){
+
+  // ret_val should be overwritten - 0 is the "error" status
+  int ret_val = 0;
 
     // write actual arguments into vector
   vector<string> args;
@@ -107,12 +129,27 @@ int cmp_filehandler::check_args (int argc, char *argv[], vector<string> &io){
 	arg_bitmap[j] = 1;
       }
       
+      // get the input filename
       if (expected_args[0] == args[i])
 	io[0] = args[i+1];
 
+      // get the output filename
       if (expected_args[1] == args[i])
 	io[1] = args[i+1];
+      
+      // get the memory usage value 
+      if (expected_args[6] == args[i]){
+	memory_usage = atoi(args[i+1].c_str());
+	
+	// 5 byte array is bottom limit
+	if (memory_usage < 5)
+	  memory_usage = 5;
 
+	// 2 GB array is top limit
+	if (memory_usage > 2000000)
+	  memory_usage = 2000000;
+	
+      }
     }
   }
   
@@ -141,14 +178,26 @@ int cmp_filehandler::check_args (int argc, char *argv[], vector<string> &io){
   
   // compress mode
   if (arg_bitmap[2] == 1)
-    return 1;
+    ret_val = 1;
 
   // decompress mode
   if (arg_bitmap[3] == 1)
-    return 2;
+    ret_val = 2;
+
+  // -----------------------------------------------------------
+  // get additional options based on the bitmap
+  if (arg_bitmap[5] == 1)
+    format_out = true;
+  
+  if (arg_bitmap[7] == 1){
+    numbering = true;
+    format_out = true; // for numbering to be true formatting must also be true
+  }
+    
+
   
   // somethings gone wrong mode
-  return 0;
+  return ret_val;
 }
 
 void cmp_filehandler::zeros(int *argc, int size){
@@ -157,8 +206,12 @@ void cmp_filehandler::zeros(int *argc, int size){
 }
 
 void cmp_filehandler::usage(){
-  cerr << "Error in usage - should be;" << endl
-       << "dnacom -i INPUT -o OUTPUT [-c] || [-d]" << endl
+  cerr << "ERROR: Unsuported input:" << endl
+       << "****** USAGE IS AS FOLLOWS ******" << endl << endl
+       << "./pufferfish -i INPUT -o OUTPUT [-c] | [-d] [OPTIONS]" << endl << endl
+       << "___________________________________________________" << endl
+       << "                      options                      " << endl
+       << "-h                  Print help associated with pufferfish" << endl << endl
        << "Exiting..." << endl;
 }
 
