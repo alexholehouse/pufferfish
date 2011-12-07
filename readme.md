@@ -1,4 +1,4 @@
-# Pufferfish (v1.0)
+# Pufferfish (v1.0 - alpha)
 
 Pufferfish (the software formerly known as dnacompressor) is an easy to use, lightweight and powerful tool for DNA compression and decompression.
 
@@ -18,7 +18,7 @@ Which is to say you take an input file (which must exist) and an output file (wh
 
 ## Usage
 
-Note that while the order of flags is irrelevant, at the moment you can't combine flags (i.e. -fn doesn't work, you'd need to do -f -n).
+Note that while the order of flags is irrelevant, at the moment you can't combine flags (i.e. `-fn` doesn't work, you'd need to do `-f -n`).
 
     $>./pufferfish -i <input file> -o <output file> [OPTIONS]
     
