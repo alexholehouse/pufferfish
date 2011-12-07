@@ -18,6 +18,8 @@ Which is to say you take an input file (which must exist) and an output file (wh
 
 ## Usage
 
+Note that while the order of flags is irrelevant, at the moment you can't combine flags (i.e. -fn doesn't work, you'd need to do -f -n).
+
     $>./pufferfish -i <input file> -o <output file> [OPTIONS]
     
 where `[OPTIONS]` must be one of compress or decomress (`-c` or `-d` and then any number of the others. See below for detailed explanation;
