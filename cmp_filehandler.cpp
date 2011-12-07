@@ -104,8 +104,6 @@ ofstream* cmp_filehandler::load_output_file(string output_filename){
     message.append(output_filename);
     system(message.c_str());
   }
-
-  
   
   // open the file (C++ creates it at this point automatically)
   output_file_p->open(output_filename.c_str(), std::ios::app);
@@ -216,7 +214,7 @@ int cmp_filehandler::check_args (int argc, char *argv[], vector<string> &io,
   if (arg_bitmap[7] == 1){
     
     // if more than 99999 bases then numbering
-    // breaks down
+    // breaks down, so ignore it
     if(99999 >= get_number_bases(io[0])){
       numbering = true;
       format_out = true; 
@@ -252,7 +250,10 @@ void cmp_filehandler::usage(){
        << "___________________________________________________" << endl
        << "                      options                      " << endl
        << "-h                  Print help associated with pufferfish" << endl << endl
-       << "Exiting..." << endl;
+       << "-f                  Adds formatting to output (-d mode only)" << endl << endl
+       << "-n                  Adds numbering and formatting to output" << endl 
+       << "                    (-d mode only)" << endl << endl
+       << "-m                  Define dedicated memory (-c mode only)" << endl << endl;
 }
 
 
@@ -263,10 +264,16 @@ void cmp_filehandler::usage(){
 // prints pufferfish help
 
 void cmp_filehandler::help(){
-  cerr << "dnacompress is a superlightweight tool for compressing/decompressing DNA into a highly portable format" << endl
+  cout << "pufferfish is a superlightweight tool for compressing/decompressing\nDNA into a highly portable format" << endl
        << "Usage is:" << endl
-       << "dnacom -i INPUT -o OUTPUT [-c] || [-d]" << endl
-       << "Exiting..." << endl << endl
+       << "./pufferfish -i INPUT -o OUTPUT [-c] | [-d] [OPTIONS]" << endl
+       << "___________________________________________________" << endl
+       << "                      options                      " << endl
+       << "-h                  Print help associated with pufferfish" << endl << endl
+       << "-f                  Adds formatting to output (-d mode only)" << endl << endl
+       << "-n                  Adds numbering and formatting to output" << endl 
+       << "                    (-d mode only)" << endl << endl
+       << "-m                  Define dedicated memory (-c mode only)" << endl << endl << endl
        << "Please address bug reports to alex@holehouse.org" << endl;
 }
 
