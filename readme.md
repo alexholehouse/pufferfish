@@ -3,7 +3,7 @@
 Pufferfish (the software formerly known as dnacompressor) is an easy to use, lightweight and powerful tool for DNA compression and decompression.
 
 NOTE
-At present we're still in alpha (December 2010) so certain features remain in the source for testing and diagnostics. Notably, byteReader.* are used for translating bytes into binary, which was used for diagnostics, but will not be required for the final system.
+At present we're still in alpha (December 2010) so certain features remain in the source for testing and diagnostics. Notably, byteReader is used for translating bytes into a cstring which looks like binary, which was used for diagnostics, but will not be required for the final system.
 
 
 ## Basic overview
