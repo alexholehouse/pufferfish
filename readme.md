@@ -8,7 +8,7 @@ At present we're still in alpha (December 2011) so certain features remain in th
 
 ## Basic overview
 
-DNA files in FASTA (i.e. RAW text) are a lot bigger than they need to be for storage or transmission - where a byte represents each character (A,T,C or G). To help deal with this, pufferfish takes as input a text file containing the FASTA format, and very quickly outputs a compressed version of that data.
+DNA files in FASTA (i.e. raw text) are a lot bigger than they need to be for storage or transmission - where a byte represents each character (A,T,C or G). To help deal with this, pufferfish takes as input a text file containing the FASTA format, and very quickly outputs a compressed version of that data.
 You can then re-expand that data to its original size using the same tool. The focus here was to provide a tiny program (compiled binary is 183Kb) with big power and functionality.
 At the moment usage is limited to
 
