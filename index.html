@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Pufferfish by rednaxela</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Pufferfish</h1>
+        <p>Super simple, super lightweight dna compression tool</p>
+        <p class="view"><a href="https://github.com/rednaxela/pufferfish">View the Project on GitHub <small>rednaxela/pufferfish</small></a></p>
+        <ul>
+          <li><a href="https://github.com/rednaxela/pufferfish/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/rednaxela/pufferfish/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/rednaxela/pufferfish">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>Pufferfish (the software formerly known as dnacompressor) is an easy to use, lightweight and powerful tool for DNA compression and decompression,, currently only available for Linux.</p>
+
+<p>NOTE
+At present pufferfish still in alpha (December 2011) so certain features remain in the source for testing and diagnostics. Notably, byteReader is used for translating bytes into a cstring which looks like binary, which was used for diagnostics, but will not be required for the final system.</p>
+
+<h2>Basic overview</h2>
+
+<p>DNA files in FASTA (i.e. raw text) are a lot bigger than they need to be for storage or transmission - where a byte represents each character (A,T,C or G). To help deal with this, pufferfish takes as input a text file containing the FASTA format, and very quickly outputs a compressed version of that data.
+You can then re-expand that data to its original size using the same tool. The focus here was to provide a tiny program (compiled binary is 183Kb) with big power and functionality.
+At the moment usage is limited to</p>
+
+<pre><code>$&gt;./pufferfish -i &lt;input file&gt; -o &lt;output file&gt; [-c] | [-d]
+</code></pre>
+
+<p>Which is to say you take an input file (which must exist) and an output file (which can exits, if it does it will be overwritten) and use either <code>-c</code> flag to indicate compress or <code>-d</code> flag to indicate decompress.</p>
+
+<h2>Usage</h2>
+
+<p>Note that while the order of flags is irrelevant, at the moment you can't combine flags (i.e. <code>-fn</code> doesn't work, you'd need to do <code>-f -n</code>).</p>
+
+<pre><code>$&gt;./pufferfish -i &lt;input file&gt; -o &lt;output file&gt; [OPTIONS]
+</code></pre>
+
+<p>where <code>[OPTIONS]</code> must be one of compress or decomress (<code>-c</code> or <code>-d</code> and then any number of the others. See below for detailed explanation;</p>
+
+<h5>compress</h5>
+
+<pre><code>-c
+</code></pre>
+
+<p>Compresses the input file and generates the output file</p>
+
+<h5>decompress</h5>
+
+<pre><code>-d
+</code></pre>
+
+<p>Decompresses a file stored in pufferfish format back to FASTA format</p>
+
+<h5>help</h5>
+
+<pre><code>-h 
+</code></pre>
+
+<p>Prints out help and usage instructions for pufferfish. Note that help overrides everything and forces the help output and nothing else.</p>
+
+<h5>memory</h5>
+
+<pre><code>-m
+</code></pre>
+
+<p>Sets the amount of dedicated memory used for the compression process (note that at present dedicated memory for decompression isn't controllable - this may be something we add later).
+At the moment the lower limit is capped at 5 bytes and the upper limit at 2 GBs (which is probably not recommended). Default is 1 MB which should be plenty!</p>
+
+<h5>formatting</h5>
+
+<pre><code>-f
+</code></pre>
+
+<p>For decompression only, formats the output into eight blocks of four bases per line</p>
+
+<h5>numbering</h5>
+
+<pre><code>-n
+</code></pre>
+
+<p>For decompression only, adds base numbers to the start of each line. NB If number of bases is greater than 99999 then the formatting becomes distorted so if this is the case numbering is forced off.</p>
+
+<h2>Installation</h2>
+
+<p>At the moment the software is only on for Linux, although it's pure C++ so porting into a Windows command line tool should be fairly straightforward (minimal OS interaction through POSIX compliant methods).</p>
+
+<ol>
+<li>
+<p>Compile using make</p>
+
+<p><code>$&gt; make</code></p>
+</li>
+<li><p>Done. To make it a system-wide executable you'll need to copy the binary to your <code>/usr/bin</code> directory or add the binary's directory to the <code>$PATH</code> variable. </p></li>
+</ol><h2>Functionality</h2>
+
+<p>Pretty limited at present, beyond compression and decompression, but things currently being added include;</p>
+
+<ul>
+<li>Define free memory usage from command line <strong>[DONE]</strong>
+</li>
+<li>Output formatting options <strong>[DONE]</strong> (mostly)</li>
+<li>Installation scripts to offer system wide installation</li>
+<li>Search NCBI BLAST using a compressed file (i.e. decompress in background and run a search using the web API - this might be a bit over the top)</li>
+<li>Improved performance through a number of avenues;
+
+<ul>
+<li>Parallelization (and associated customization)</li>
+<li>Algorithmic optimization</li>
+<li>Advanced compression structuring</li>
+</ul>
+</li>
+<li>Direct transmission link (i.e. no centralized server but direct P2P transmission)</li>
+<li>Hilarious logo (less of a priority)</li>
+</ul><h2>Contact</h2>
+
+<p>Contact me at alex@holehouse.org</p>
+
+<h2>License</h2>
+
+<p>(The MIT License)</p>
+
+<p>Copyright © 2011 Alex Holehouse</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ‘Software’), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED ‘AS IS’, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/rednaxela">rednaxela</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
