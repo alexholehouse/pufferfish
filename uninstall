@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# NB - this should be the same as used in the install file
+INSTALLATION_PATH=/usr/bin/
+echo "Uninstalling...."
+sudo rm $INSTALLATION_PATH/pufferfish
+echo "-----------------------"
+if [ $? == 0 ] 
+then
+	echo "Binary removed fom $INSTALLATION_PATH. Uninstallation complete!"
+else 
+	echo "Unable to remove binary from $INSTALLATION_PATH. Did you install at a different location, or were you not sudo?"
+fi
+
+

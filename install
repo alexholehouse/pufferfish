@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# You may wish to install the binary to a different location?
+INSTALLATION_PATH=/usr/bin/
+
+# in case you prematurly exit during compilation...
+trap 'echo "Exiting gracefully...";make clean;rm $INSTALLATION_PATH/pufferfish; exit 1' HUP INT QUIT TERM
+
+cd src
+
+echo "Building from source..."
+make
+sudo cp -i pufferfish $INSTALLATION_PATH
+echo "-----------------------"
+if [ $? == 0 ] 
+then
+	make clean > /dev/null
+	rm pufferfish
+	echo "Installation complete - please restart your shell"
+else 
+	make clean > /dev/null
+	echo -e "... error. Operation was not completed - were you sudo?";
+fi
+
+cd ..
+
+
+
+
+
+
+
