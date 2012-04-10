@@ -69,7 +69,7 @@ Pretty limited at present, beyond compression and decompression, but things curr
 
 * Define free memory usage from command line **[DONE]**
 * Output formatting options **[DONE]** (mostly)
-* Installation scripts to offer system wide installation
+* Installation scripts to offer system wide installation **[DONE]**
 * Search NCBI BLAST using a compressed file (i.e. decompress in background and run a search using the web API - this might be a bit over the top)
 * Improved performance through a number of avenues;
     * Parallelization (and associated customization)
