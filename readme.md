@@ -54,13 +54,15 @@ For decompression only, adds base numbers to the start of each line. NB If numbe
 ## Installation
 At the moment the software is only on for linux, although it's pure C++ so porting into a windows command line tool should be fairly straightforward (minimal OS interaction through POSIX compliant methods).
 
-1. Compile using make
+To install, simply run the insall script (executable). You'll be prompted for your root password at some point to add the binary to a PATH directory.
 
-
-
-     `$> make`
+     `$> ./install`
     
-2. Done. To make it a system-wide executable you'll need to copy the binary to your `/usr/bin` directory or add the binary's directory to the `$PATH` variable. 
+## Uninstallation
+To remove, like installing, just run the uninstall binary. Again, you'll be prompted for your root password.
+
+     `$> ./uninstall`
+
 
 ## Functionality
 Pretty limited at present, beyond compression and decompression, but things currently being added include;
